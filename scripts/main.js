@@ -17,16 +17,23 @@ require.config({
         backbone: '../components/backbone/backbone-min',
         underscore: '../components/underscore/underscore-min',
         handlebars: '../components/handlebars/handlebars.min',
-        marked: '../components/marked/lib/marked'
+        marked: '../components/marked/lib/marked',
+
+        types: '../server/types'
     }
 });
 
-define('singleton', function () {
-    return {};
+define('app', ['models/app'], function (AppModel) {
+    return new AppModel();
 });
 
 require([
-
-], function (App) {
-    var app = new App();
+    'app',
+    'views/app',
+    'models/socket'
+], function (App, AppView, Socket) {
+    App.init();
+    
+    var app_view = new AppView();
+    app_view.render();
 });

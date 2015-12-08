@@ -33,7 +33,8 @@ var Client = function (connection) {
 	var joinFrame = function () {
 		return {
 			sender: data.id,
-			type: 'join'
+			type: 'join',
+			name: data.name
 		};
 	};
 
@@ -245,12 +246,26 @@ var Client = function (connection) {
 		}
 	}.bind(this));
 
+	var peers = [];
+	for (var i in clients) {
+		var client = clients[i];
+
+		peers.push({
+			id: client.getId(),
+			name: client.getName(),
+			cursor: client.getCursorPosition(),
+			color: client.getColor(),
+			weight: client.getWeight()
+		});
+	}
+
 	connection.sendText(JSON.stringify({
 		sender: 'system',
 		type: 'id',
 		name: data.name,
 		id: this.getId(),
-		secret: this.secret()
+		secret: this.secret(),
+		peers: peers
 	}));
 
 	clients.push(this);

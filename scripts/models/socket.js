@@ -1,6 +1,7 @@
 define('models/socket', [
-	'backbone'
-], function (Backbone) {
+	'backbone',
+	'underscore'
+], function (Backbone, _) {
 	var SocketModel = Backbone.Model.extend({
 		defaults: {
 			host: window.location.host,

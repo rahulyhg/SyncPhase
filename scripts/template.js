@@ -14,11 +14,11 @@ define([
         id += '_template';
         var source_el = jQuery('#' + id);
 
-        this.render = Handlebars.compile(source_el.html());
-        this.tagName = source_el.data('tag');
-        this.className = source_el.data('class');
-        this.id = source_el.data('id');
+        if (source_el.length !== 1) {
+            throw 'Template not found';
+        }
 
+        this.render = Handlebars.compile(source_el.html());
     };
 
     return function (id) {

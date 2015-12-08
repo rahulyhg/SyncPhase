@@ -35,7 +35,7 @@ module.exports = function (broadcaster, message) {
 		var client = clients[i];
 
 		if (client !== broadcaster) {
-			client.getConnection().sendText(JSON.stringify(sendable));
+			client.getConnection().sendText(sendable);
 		}
 	}
 };
