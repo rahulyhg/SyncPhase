@@ -1,0 +1,32 @@
+define([
+    'handlebars',
+    'jquery',
+    'underscore'
+], function (Handlebars, jQuery, _) {
+    var templates = {};
+
+    var Template = function (id) {
+
+        if (!_.isString(id)) {
+            throw 'TemplateID must be string.';
+        }
+
+        id += '_template';
+        var source_el = jQuery('#' + id);
+
+        this.render = Handlebars.compile(source_el.html());
+        this.tagName = source_el.data('tag');
+        this.className = source_el.data('class');
+        this.id = source_el.data('id');
+
+    };
+
+    return function (id) {
+        if (typeof templates[id] !== 'undefined') {
+            return templates[id];
+        }
+
+        var template = templates[id] = new Template(id);
+        return template;
+    };
+});
