@@ -1,0 +1,10 @@
+.peer-cursor {
+	position: absolute;
+	z-index: 1000;
+
+	width: 0.7em;
+	height: 0.7em;
+	background: #f40;
+
+	@include border-radius(100%);
+}

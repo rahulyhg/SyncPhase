@@ -22,9 +22,19 @@ var Client = function (connection) {
 		weight: 32
 	};
 
-
 	// Data Initialization
-	data.id = clients.length+1;
+	var ex_id = 0;
+	for (var i = 0; i <= clients.length; i++) {
+		var client = clients[i];
+
+		if (typeof client === 'undefined' || client.getId() !== (ex_id+1)) {
+			data.id = ex_id+1;
+			break;
+		}
+
+		ex_id = client.getId();
+	}
+
 	data.name = 'user_' + (data.id);
 
 
@@ -270,6 +280,19 @@ var Client = function (connection) {
 
 	clients.push(this);
 	console.log('New Client - ID: ' + data.id);
+
+
+	connection.on('close', function () {
+		var index = clients.indexOf(this);
+		clients.splice(index, 1);
+
+		broadcast(this, {
+			sender: data.id,
+			type: 'leave'
+		});
+
+		console.log('Client Disconnected: ' + data.name);
+	}.bind(this));
 };
 
 

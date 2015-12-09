@@ -1,6 +1,11 @@
 @import 'config';
 @import 'compass';
 
-body {
-	background: #fff;
-}
+@import 'grid/grid';
+@import 'grid/responsive';
+
+@import 'modules/app';
+@import 'modules/canvas';
+@import 'modules/control-bar';
+@import 'modules/cursor';
+@import 'modules/peer-cursor';

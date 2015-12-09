@@ -37,6 +37,12 @@ define('models/socket', [
 			socket.addEventListener('close', function (event) {
 				this.trigger('close', event);
 			}.bind(this));
+		},
+		send: function (msg) {
+			this.socket.send(msg);
+		},
+		close: function (code, reason) {
+			this.socket.close(code, reason);
 		}
 	});
 

@@ -33,7 +33,9 @@ require([
     'models/socket'
 ], function (App, AppView, Socket) {
     App.init();
-    
-    var app_view = new AppView();
-    app_view.render();
+
+    App.on('initiated', function () {
+        var app_view = new AppView();
+        app_view.render();
+    });
 });

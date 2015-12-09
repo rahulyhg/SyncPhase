@@ -1,0 +1,19 @@
+.canvas {
+	position: absolute;
+
+	top: 0;
+	left: $control-bar-width;
+
+	width: calc(100% - #{$control-bar-width});
+	height: 100%;
+
+	@include in-portrait {
+		top: $control-bar-width;
+		left: 0;
+
+		width: 100%;
+		height: calc(100% - #{$control-bar-width});
+	}
+
+	@import 'canvas/canvas';
+}

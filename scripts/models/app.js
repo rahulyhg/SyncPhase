@@ -53,6 +53,8 @@ define('models/app', [
 						id: data.id,
 						secret: data.secret,
 						name: data.name
+					}, {
+						app: this
 					});
 
 					// Set the user to the User Model
@@ -74,6 +76,7 @@ define('models/app', [
 				}
 
 				console.info('Main Socket Inititiated');
+				this.trigger('initiated');
 
 				// Listen for future Messages
 				this.listenForMessages();
@@ -110,6 +113,11 @@ define('models/app', [
 						this.handleNameSet(sender, payload);
 						break;
 
+					case Types.LEAVE:
+						console.info('--- Leave Message');
+						this.handleLeave(sender);
+						break;
+
 					case Types.CURSOR_POSITION:
 						console.info('--- Cursor Position Message');
 						this.handleCursorPosition(sender, payload);
@@ -126,8 +134,14 @@ define('models/app', [
 		handleNameSet: function (sender, payload) {
 			this.peers.get(sender).set('name', payload);
 		},
+		handleLeave: function (sender) {
+			this.peers.remove(sender);
+		},
 		handleCursorPosition: function (sender, payload) {
+			var x = payload.substr(0, 4);
+			var y = payload.substr(4, 4);
 
+			this.peers.get(sender).setCursorPosition(x, y);
 		}
 	});
 

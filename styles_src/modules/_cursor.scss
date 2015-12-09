@@ -1,0 +1,12 @@
+.cursor {
+	position: absolute;
+	z-index: 1000;
+	
+	pointer-events: none;
+
+	&.pen {
+		@include border-radius(100%);
+		cursor: none;
+		border: $cursor-border-width $cursor-border-style $cursor-border-color; 
+	}
+}

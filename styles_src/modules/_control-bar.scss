@@ -1,0 +1,16 @@
+.control-bar {
+	position: absolute;
+
+	top: 0;
+	left: 0;
+
+	width: $control-bar-width;
+	height: 100%;
+
+	@include in-portrait {
+		width: 100%;
+		height: $control-bar-width;
+	}
+
+	background: $control-bar-color;
+}

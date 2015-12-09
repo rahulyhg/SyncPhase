@@ -44,6 +44,18 @@
 	}
 }
 
+@mixin in-portrait {
+	@media (orientation: portrait) {
+		@content;
+	}
+}
+
+@mixin in-landscape {
+	@media (orientation: landscape) {
+		@content;
+	}
+}
+
 @include in-mobile { b { color: 0; } }
 @include at-tablet { b { color: 0; } }
 @include in-tablet { b { color: 0; } }
