@@ -4,9 +4,9 @@
   "description": "Next Level Realtime Collaboration",
   "main": " ",
   "dependencies": {
-    "js-sha512": "^0.2.2",
-    "nodejs-websocket": "^1.4.1",
-    "phpjs": "^1.3.2"
+    "buffer-dataview": "0.0.2",
+    "lodash": "^3.10.1",
+    "ws": "^0.8.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -23,7 +23,7 @@
     "whiteboard"
   ],
   "author": "Omran Jamal <o.jamal97@gmail.com>",
-  "license": "LGPL2.1",
+  "license": "LGPL-2.1",
   "bugs": {
     "url": "https://github.com/omranjamal/SyncPhase/issues"
   },

@@ -1,15 +1,8 @@
-var socket = require('nodejs-websocket');
-var messaging = require('./server/messaging');
+var WebSocketServer = require('ws').Server;
+var ComManager = require('./server/com');
 
-// Messaging
-socket.createServer(messaging).listen(8897);
+var Com = new WebSocketServer({
+	port: 8897
+});
 
-// // Drawing
-// socket.createServer(function (connection) {
-	
-// }).listen(8898);
-
-// // Audio
-// socket.createServer(function (connection) {
-
-// }).listen(8899);
+Com.on('connection', ComManager);
