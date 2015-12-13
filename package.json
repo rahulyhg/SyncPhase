@@ -4,11 +4,13 @@
   "description": "Next Level Realtime Collaboration",
   "main": " ",
   "dependencies": {
-    "buffer-dataview": "0.0.2",
-    "lodash": "^3.10.1",
     "ws": "^0.8.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "compass": "^0.1.1",
+    "gulp": "^3.9.0",
+    "gulp-watch": "^4.3.5"
+  },
   "scripts": {
     "test": " ",
     "start": "node server.js"

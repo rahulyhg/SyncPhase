@@ -1,6 +1,8 @@
-components
+public
 node_modules
+vendor
 npm-debug.log
 .fuse*
-styles
+composer.lock
 .sass-cache
+storage

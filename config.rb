@@ -1,9 +1,9 @@
 require 'sass-media_query_combiner'
 
 http_path = "/"
-css_dir = "styles"
-sass_dir = "styles_src"
-images_dir = "images"
-javascripts_dir = "scripts"
+css_dir = "public/styles"
+sass_dir = "resources/assets/styles"
+images_dir = "public/images"
+javascripts_dir = "public/scripts"
 
 output_style = :expanded

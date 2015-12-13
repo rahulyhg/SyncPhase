@@ -17,9 +17,7 @@ require.config({
         backbone: '../components/backbone/backbone-min',
         underscore: '../components/underscore/underscore-min',
         handlebars: '../components/handlebars/handlebars.min',
-        marked: '../components/marked/lib/marked',
-
-        types: '../server/types'
+        marked: '../components/marked/lib/marked'
     }
 });
 
@@ -32,10 +30,10 @@ require([
     'views/app',
     'models/socket'
 ], function (App, AppView, Socket) {
-    App.init();
-
     App.on('initiated', function () {
         var app_view = new AppView();
         app_view.render();
     });
+    
+    App.init();
 });
