@@ -18,16 +18,21 @@ module.exports = function (connection) {
 	});
 
 
-	switcher.switch(client, 'join');
+	clients.forEach(function (peer) {
+		var msg = switcher.makeBuffer(peer, 'join');
+		client.connection.send(msg);
+	});
+
+	switcher.broadcast(client, 'join');
 	clients.push(client);
 
 
 	client.on('change', function (key, value, client) {
-		switcher.switch(client, key, value);
+		switcher.broadcast(client, key, value);
 	});
 
 	client.on('message', function (buffer, client) {
-		switcher.switch(client, 'message', buffer);
+		switcher.broadcast(client, 'message', buffer);
 	});
 
 	connection.on('close', function () {
@@ -35,8 +40,8 @@ module.exports = function (connection) {
 		clients.splice(index, 1);
 
 		console.log('#'+client.get('id')+' disconnected.');
-		switcher.switch(client, 'leave');
+		switcher.broadcast(client, 'leave');
 	});
 
-	switcher.switch(client, 'join');
+	switcher.broadcast(client, 'join');
 };

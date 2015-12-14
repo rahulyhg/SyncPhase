@@ -20,6 +20,7 @@ define('models/socket', [
 		initialize: function () {
 			// Register the Socket
 			var socket = this.socket = new WebSocket(this.url());
+			socket.binaryType = 'arraybuffer';
 
 			// Convert Native Socket Events to Model Events
 			socket.addEventListener('open', function (event) {

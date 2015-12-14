@@ -27,9 +27,8 @@ define('app', ['models/app'], function (AppModel) {
 
 require([
     'app',
-    'views/app',
-    'models/socket'
-], function (App, AppView, Socket) {
+    'views/app'
+], function (App, AppView) {
     App.on('initiated', function () {
         var app_view = new AppView();
         app_view.render();

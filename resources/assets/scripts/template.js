@@ -1,4 +1,4 @@
-define([
+define('template', [
     'handlebars',
     'jquery',
     'underscore'
@@ -15,7 +15,7 @@ define([
         var source_el = jQuery('#' + id);
 
         if (source_el.length !== 1) {
-            throw 'Template not found';
+            throw 'Template Not Found.';
         }
 
         this.render = Handlebars.compile(source_el.html());

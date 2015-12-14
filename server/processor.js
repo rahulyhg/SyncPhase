@@ -37,6 +37,8 @@ Processor.prototype.types[types.MESSAGE] = function (data) {
 };
 
 Processor.prototype.process = function (type, data) {
+	// TODO: Reuse Buffers Whenever Possible
+
 	if (typeof this.types[type] !== 'undefined') {
 		var usable = new Buffer(data.length-1);
 		data.copy(usable, 0, 1);

@@ -20,6 +20,12 @@ define('models/app', [
 		},
 		sockets: null,
 		peers: null,
+		offsets: {
+			cursor: {
+				x: 0  +2,
+				y: 2  +2
+			}
+		},
 		initialize: function () {
 			this.sockets = new SocketsCollection();
 			this.peers = new PeersCollection();
@@ -37,50 +43,18 @@ define('models/app', [
 				this.set('messaging', true);
 			}, this);
 
+			var user = new UserModel({}, {
+				app: this
+			});
+
+			// Set the user to the User Model
+			this.set('user', user);
+
+			this.trigger('initiated');
+
+			// Listen for future Messages
 			console.info('Listening for Initiation Message');
-
-			// Only once, the Initiation message
-			msgSoc.once('message', function (event) {
-				console.info('Initiation Message Recieved');
-
-				var data = event.data;
-
-				// If its a JSON String
-				if (_.isString(data) && data.substr(0, 1) === '{') {
-					data = JSON.parse(data);
-
-					var user = new UserModel({
-						id: data.id,
-						secret: data.secret,
-						name: data.name
-					}, {
-						app: this
-					});
-
-					// Set the user to the User Model
-					this.set('user', user);
-
-					// Load Peers and their Current State
-					for (var i in data.peers) {
-						var peer = data.peers[i];
-
-						this.peers.add({
-							id: peer.id,
-							name: peer.name,
-							color: peer.color,
-							cursor_x: peer.cursor.x,
-							cursor_y: peer.cursor.y,
-							weight:  peer.weight
-						});
-					}
-				}
-
-				console.info('Main Socket Inititiated');
-				this.trigger('initiated');
-
-				// Listen for future Messages
-				this.listenForMessages();
-			}, this);
+			this.listenForMessages();
 		},
 		listenForMessages: function () {
 			console.info('Listening for Messages');
@@ -88,29 +62,17 @@ define('models/app', [
 			var msgSoc = this.sockets.get('msg');
 
 			msgSoc.on('message', function (event) {
-				var data = event.data;
+				var data = new DataView(event.data);
 
-				console.info('Message Recieved: ' + data);
-
-				if (!_.isString(data) || data.length < 4) {
-					throw 'A String of atleast 4 characters was expected';
-				}
-
-				var sender = parseInt(data.substr(0, 2));
-				var action = parseInt(data.substr(2, 2));
-				var payload = data.substr(4);
+				var sender = data.getUint8(0);
+				var action = data.getUint8(1);
 
 				console.log('-- action: ' + action);
 
 				switch (action) {
 					case Types.JOIN:
 						console.info('--- Join Message');
-						this.handleJoin(sender, payload);
-						break;
-
-					case Types.NAME_SET:
-						console.info('--- NameSet Message');
-						this.handleNameSet(sender, payload);
+						this.handleJoin(sender);
 						break;
 
 					case Types.LEAVE:
@@ -118,30 +80,30 @@ define('models/app', [
 						this.handleLeave(sender);
 						break;
 
-					case Types.CURSOR_POSITION:
+					case Types.CURSOR:
 						console.info('--- Cursor Position Message');
-						this.handleCursorPosition(sender, payload);
+						this.handleCursorPosition(sender, data);
 						break;
 				}
 			}, this);
 		},
 		handleJoin: function (sender, payload) {
 			this.peers.add({
-				id: sender,
-				name: payload
+				id: sender
 			});
 		},
-		handleNameSet: function (sender, payload) {
-			this.peers.get(sender).set('name', payload);
-		},
 		handleLeave: function (sender) {
-			this.peers.remove(sender);
+			var peer = this.peers.remove(sender);
+			peer.trigger('remove');
 		},
 		handleCursorPosition: function (sender, payload) {
-			var x = payload.substr(0, 4);
-			var y = payload.substr(4, 4);
-
-			this.peers.get(sender).setCursorPosition(x, y);
+			var x = payload.getUint16(this.offsets.cursor.x);
+			var y = payload.getUint16(this.offsets.cursor.y);
+			var peer = this.peers.get(sender);
+			
+			if (peer) {
+				peer.setCursorPosition(x, y);
+			}
 		}
 	});
 

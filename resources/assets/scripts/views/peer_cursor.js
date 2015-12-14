@@ -1,7 +1,7 @@
-define('views/peer', [
+define('views/peer_cursor', [
 	'backbone'
 ], function (Backbone) {
-	var PeerView = Backbone.View.extend({
+	var PeerCursorView = Backbone.View.extend({
 		tagName: 'div',
 		className: 'peer-cursor',
 		name: null,
@@ -11,8 +11,8 @@ define('views/peer', [
 			this.listen();
 		},
 		listen: function () {
-			this.model.on('change:name', function (peer, name) {
-				console.info('Peer#'.peer.get('id') + ' changed name from "' + peer.previous('name') + '" to "' + name + '"');
+			this.model.on('remove', function () {
+				this.remove();
 			}, this);
 
 			this.model.on('change:cursor-position', function (data) {
@@ -32,5 +32,5 @@ define('views/peer', [
 		}
 	});
 
-	return PeerView;
+	return PeerCursorView;
 });

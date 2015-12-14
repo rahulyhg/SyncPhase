@@ -4,6 +4,8 @@ var Switcher = function (clients) {
 	this._clients = clients;
 };
 
+// TODO: Reuse Buffers Whenever Possible
+
 Switcher.prototype.types = {
 	join: function () {
 		return {
@@ -68,9 +70,8 @@ Switcher.prototype.types = {
 	}
 };
 
-Switcher.prototype.switch = function (client, key, value) {
+Switcher.prototype.makeBuffer = function (client, key, value) {
 	var payload = this.types[key](value);
-
 	var msg = null;
 
 	if (payload.data instanceof Buffer) {
@@ -84,6 +85,12 @@ Switcher.prototype.switch = function (client, key, value) {
 	// Write Meta Data
 	msg.writeUInt8(client.get('id'), 0);
 	msg.writeUInt8(payload.type, 1);
+
+	return msg;
+}
+
+Switcher.prototype.broadcast = function (client, key, value) {
+	var msg = this.makeBuffer(client, key, value);
 
 	this._clients.forEach(function (peer) {
 		if (peer !== client) {

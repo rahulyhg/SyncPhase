@@ -4,13 +4,12 @@ define([
 	'jquery',
 	'views/bar',
 	'views/canvas',
-	'views/peer',
+	'views/peer_cursor',
 	'views/cursor'
-], function (App, Backbone, jQuery, BarView, CanvasView, PeerView, CursorView) {
+], function (App, Backbone, jQuery, BarView, CanvasView, PeerCursorView, CursorView) {
 	var AppView = Backbone.View.extend({
 		el: 'body',
 		views: {
-			peers: []
 		},
 		user: null,
 		shortcut: function (key) {
@@ -26,6 +25,18 @@ define([
 			']': function () {
 				console.log('Increase Weight');
 				this.user.increaseWeight();
+			},
+			'+': function () {
+				console.log('Zoom In');
+			},
+			'-': function () {
+				console.log('Zoom Out');
+			},
+			' ': function () {
+				console.log('Pan Start');
+			},
+			' up': function () {
+				console.log('Pan End');
 			}
 		},
 		initialize: function () {
@@ -46,10 +57,6 @@ define([
 				this.renderPeer(peer);
 			}, this);
 
-			App.peers.on('remove', function (peer) {
-				console.log('Peer #' + peer.get('name') + ' Left.');
-			});
-
 			jQuery(window).resize(function () {
 				console.info('Window Resized');
 				App.trigger('resize');
@@ -65,11 +72,9 @@ define([
 			}.bind(this));
 		},
 		renderPeer: function (peerModel) {
-			var peer = new PeerView({
+			var peer = new PeerCursorView({
 				model: peerModel
 			});
-
-			this.views.peers.push(peer);
 
 			peer.render({
 				container: this.$el

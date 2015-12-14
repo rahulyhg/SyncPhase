@@ -19,13 +19,13 @@ define('models/user', [
 			App = opts.app;
 			this.msgSoc = App.sockets.get('msg');
 
+			var msg = new DataView(new ArrayBuffer(5));
+			
 			this.on('change:cursor-position', function (position) {
-				var action = str_pad(Types.CURSOR_POSITION, 2, '0', 'STR_PAD_LEFT');
-				var payload = '';
-				payload += str_pad(position.x, 4, '0', 'STR_PAD_LEFT');
-				payload += str_pad(position.y, 4, '0', 'STR_PAD_LEFT');
+				msg.setUint8(0, Types.CURSOR);
+				msg.setUint16(1, position.x);
+				msg.setUint16(3, position.y);
 
-				var msg = action + payload;
 				this.msgSoc.send(msg);
 			}, this);
 		},
