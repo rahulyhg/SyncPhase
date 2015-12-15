@@ -4,19 +4,22 @@ define('models/app', [
 	'collections/sockets',
 	'models/user',
 	'collections/peers',
-	'types'
+	'types',
+	'models/canvas'
 ], function (
 	Backbone,
 	_,
 	SocketsCollection,
 	UserModel,
 	PeersCollection,
-	Types
+	Types,
+	CanvasModel
 ) {
 	var AppModel = Backbone.Model.extend({
 		defaults: {
 			messaging: false, // If a messaging connection is established.
-			user: null        // Main User Model
+			user: null,       // Main User Model
+			canvas: null      // Cnavas Model
 		},
 		sockets: null,
 		peers: null,
@@ -29,6 +32,7 @@ define('models/app', [
 		initialize: function () {
 			this.sockets = new SocketsCollection();
 			this.peers = new PeersCollection();
+			this.set('canvas', new CanvasModel());
 
 			console.info('Main App Model Initialized');
 		},

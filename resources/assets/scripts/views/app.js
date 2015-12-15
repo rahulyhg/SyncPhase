@@ -43,7 +43,10 @@ define([
 			this.user = App.get('user');
 
 			this.views.bar = new BarView();
-			this.views.canvas = new CanvasView();
+			this.views.canvas = new CanvasView({
+				model: App.get('canvas')
+			});
+
 			this.views.cursor = new CursorView();
 
 			this.listen();
