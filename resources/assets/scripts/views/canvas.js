@@ -38,6 +38,8 @@ define('views/canvas', [
 				this.renderViewport();
 			}, this);
 
+			this.model.on('change:zoom', this.renderViewport, this);
+
 			this.el.addEventListener('touchmove', function (event) {
 				var touches = event.changedTouches;
 
@@ -80,13 +82,15 @@ define('views/canvas', [
 			var ctx = this.shadow.context;
 			var spacing = 20;
 
+			ctx.fillStyle = 'white';
+			ctx.fillRect(0, 0, size, size);
+
 			ctx.beginPath();
 			ctx.lineWidth = 1;
 			ctx.strokeStyle = '#eee';
 
 			for (var i = 0; i < lines; i++) {
 				var offset = i*spacing+spacing;
-				console.log(offset);
 
 				ctx.moveTo(offset, 0);
 				ctx.lineTo(offset, size);
@@ -100,17 +104,18 @@ define('views/canvas', [
 		renderViewport: function () {
 			var src = this.shadow.el;
 			var ctx = this.$el.find('canvas#canvas')[0].getContext('2d');
+			var zoom_ratio = 100/this.model.get('zoom');
 
 			ctx.drawImage(
 				src,
-				this.model.get('position_x'),
-				this.model.get('position_y'),
-				this.model.get('viewport_width'),
-				this.model.get('viewport_height'),
-				0,
-				0,
-				this.model.get('viewport_width'),
-				this.model.get('viewport_height')
+				this.model.get('position_x'), // src 
+				this.model.get('position_y'), // src
+				this.model.get('viewport_width')*zoom_ratio, // src
+				this.model.get('viewport_height')*zoom_ratio, // src
+				0, // dst
+				0, // dst
+				this.model.get('viewport_width'), // dst
+				this.model.get('viewport_height') // dst
 			);
 		},
 		render: function (opts) {

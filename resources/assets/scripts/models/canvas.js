@@ -9,6 +9,14 @@ define('models/canvas', [
 			viewport_width: null,
 			position_x: 0,
 			position_y: 0
+		},
+		zoomIn: function () {
+			var zoom = this.get('zoom');
+			this.set('zoom', zoom+(zoom/2));
+		},
+		zoomOut: function () {
+			var zoom = this.get('zoom');
+			this.set('zoom', zoom-(zoom/4));
 		}
 	});
 

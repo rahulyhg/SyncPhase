@@ -47,17 +47,14 @@ define('models/app', [
 				this.set('messaging', true);
 			}, this);
 
-			var user = new UserModel({}, {
-				app: this
-			});
 
-			// Set the user to the User Model
-			this.set('user', user);
+			this.set('user', new UserModel({}, {
+				app: this
+			}));
+
+			
 
 			this.trigger('initiated');
-
-			// Listen for future Messages
-			console.info('Listening for Initiation Message');
 			this.listenForMessages();
 		},
 		listenForMessages: function () {

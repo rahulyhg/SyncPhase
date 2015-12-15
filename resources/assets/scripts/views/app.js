@@ -12,6 +12,7 @@ define([
 		views: {
 		},
 		user: null,
+		canvas: null,
 		shortcut: function (key) {
 			if (typeof this.shortcuts[key] !== 'undefined') {
 				this.shortcuts[key].apply(this);
@@ -28,9 +29,11 @@ define([
 			},
 			'+': function () {
 				console.log('Zoom In');
+				this.canvas.zoomIn();
 			},
 			'-': function () {
 				console.log('Zoom Out');
+				this.canvas.zoomOut();
 			},
 			' ': function () {
 				console.log('Pan Start');
@@ -41,6 +44,7 @@ define([
 		},
 		initialize: function () {
 			this.user = App.get('user');
+			this.canvas = App.get('canvas');
 
 			this.views.bar = new BarView();
 			this.views.canvas = new CanvasView({
@@ -68,6 +72,8 @@ define([
 			var keys = {
 				221: ']',
 				219: '[',
+				107: '+',
+				109: '-'
 			};
 
 			this.$el.keydown(function (event) {
