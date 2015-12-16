@@ -19,11 +19,11 @@ define('models/canvas', [
 		},
 		zoomIn: function () {
 			var zoom = this.get('zoom');
-			this.set('zoom', zoom+(zoom/2));
+			this.set('zoom', zoom+20);
 		},
 		zoomOut: function () {
 			var zoom = this.get('zoom');
-			this.set('zoom', zoom-(zoom/4));
+			this.set('zoom', zoom-20);
 		}
 	});
 

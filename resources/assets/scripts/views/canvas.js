@@ -95,10 +95,25 @@ define('views/canvas', [
 		},
 		mousemove: function (event) {
 			console.log('User Moving Mouse..');
-			var x = this.model.get('viewport_position_x');
-			var y = this.model.get('viewport_position_y');
 
-			App.get('user').setCursorPosition(event.pageX-x, event.pageY-y);
+			var zoom_ratio = 100/this.model.get('zoom');
+
+			var viewport_width = this.model.get('viewport_width');
+			var viewport_height = this.model.get('viewport_height');
+
+			var viewport_x = event.pageX-this.model.get('viewport_position_x');
+			var viewport_y = event.pageY-this.model.get('viewport_position_y');
+
+			var ratio_x = viewport_x/viewport_width;
+			var ratio_y = viewport_y/viewport_height;
+
+			var source_offset_x = (this.model.get('viewport_width')*zoom_ratio)*ratio_x;
+			var source_offset_y = (this.model.get('viewport_height')*zoom_ratio)*ratio_y;
+
+			var x = this.model.get('position_x')+source_offset_x;
+			var y = this.model.get('position_y')+source_offset_y;
+
+			App.get('user').setCursorPosition(x, y, event.pageX, event.pageY);
 		},
 		mousedown: function (event) {
 			console.log('User Mouse Down...');

@@ -12,7 +12,9 @@ define('models/user', [
 			secret: null,
 			cursor_x: 0,
 			cursor_y: 0,
-			weight: 32
+			weight: 10,
+			page_x: 0,
+			page_y: 0
 		},
 		msgSoc: null,
 		initialize: function (attrs, opts) {
@@ -29,13 +31,18 @@ define('models/user', [
 				this.msgSoc.send(msg);
 			}, this);
 		},
-		setCursorPosition: function (x, y) {
-			this.set('cursor_x', x);
-			this.set('cursor_y', y);
+		setCursorPosition: function (x, y, px, py) {
+			this.set('cursor_x', Math.round(x));
+			this.set('cursor_y', Math.round(y));
+
+			this.set('page_x', px);
+			this.set('page_y', py);
 
 			this.trigger('change:cursor-position', {
 				x: x,
-				y: y
+				y: y,
+				px: px,
+				py: py
 			});
 		},
 		getCursorPosition: function () {
@@ -46,11 +53,11 @@ define('models/user', [
 		},
 		increaseWeight: function () {
 			var weight = this.get('weight');
-			this.set('weight', weight+(weight/2));
+			this.set('weight', weight+10);
 		},
 		decreaseWeight: function () {
 			var weight = this.get('weight');
-			this.set('weight', weight-(weight/4));
+			this.set('weight', weight-10);
 		}
 	});
 

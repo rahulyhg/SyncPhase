@@ -6,8 +6,8 @@ define('views/cursor', [
 		tagName: 'div',
 		className: 'cursor',
 		user: null,
-		weight: 32,
-		midpoint: 32/2,
+		weight: null,
+		midpoint: null,
 		x: 0,
 		y: 0,
 		offset: {
@@ -15,14 +15,16 @@ define('views/cursor', [
 			y: 0
 		},
 		initialize: function () {
-			this.user = App.get('user');
+			var user = this.user = App.get('user');
+			this.weight = user.get('weight');
+			this.midpoint = this.weight/2;
 
 			this.listen();
 		},
 		listen: function () {
 			this.user.on('change:cursor-position', function (data) {
-				this.x = data.x;
-				this.y = data.y;
+				this.x = data.px;
+				this.y = data.py;
 
 				this.renderLocation();
 			}, this);
@@ -32,28 +34,28 @@ define('views/cursor', [
 				this.renderWeight();
 			}, this);
 
-			var canvas = App.get('canvas');
-			canvas.on('change:viewport_position_x', function (canvas, x) {
-				console.log(x);
-				this.offset.x = x;
-			}, this);
+			// var canvas = App.get('canvas');
+			// canvas.on('change:viewport_position_x', function (canvas, x) {
+			// 	console.log(x);
+			// 	this.offset.x = x;
+			// }, this);
 
-			canvas.on('change:viewport_position_y', function (canvas, y) {
-				console.log(y);
-				this.offset.y = y;
-			}, this);
+			// canvas.on('change:viewport_position_y', function (canvas, y) {
+			// 	console.log(y);
+			// 	this.offset.y = y;
+			// }, this);
 		},
 		renderWeight: function () {
 			this.midpoint = this.weight/2;
 			this.$el.height(this.weight).width(this.weight);
 
-			this.el.style.top = (this.y-this.midpoint+this.offset.y) + 'px';
-			this.el.style.left = (this.x-this.midpoint+this.offset.x) + 'px';
+			this.el.style.top = (this.y-this.midpoint) + 'px';
+			this.el.style.left = (this.x-this.midpoint) + 'px';
 		},
 		renderLocation: function () {
 			console.log(this.offset.x);
-			this.el.style.top = (this.y-this.midpoint+this.offset.y) + 'px';
-			this.el.style.left = (this.x-this.midpoint+this.offset.x) + 'px';
+			this.el.style.top = (this.y-this.midpoint) + 'px';
+			this.el.style.left = (this.x-this.midpoint) + 'px';
 		},
 		render: function (opts) {
 			var container = opts.container;
