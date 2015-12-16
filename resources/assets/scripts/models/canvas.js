@@ -11,7 +11,8 @@ define('models/canvas', [
 			viewport_position_x: null,
 			viewport_position_y: null,
 			position_x: 0,
-			position_y: 0
+			position_y: 0,
+			panning: false
 		},
 		elements: null,
 		initialize: function () {

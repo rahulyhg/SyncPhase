@@ -37,9 +37,15 @@ define([
 			},
 			' ': function () {
 				console.log('Pan Start');
+				this.views.canvas.startPan();
 			},
 			' up': function () {
 				console.log('Pan End');
+				this.views.canvas.stopPan();
+			},
+			'w': function () {
+				console.log('Wipe');
+				this.views.canvas.wipe();
 			}
 		},
 		initialize: function () {
@@ -73,11 +79,29 @@ define([
 				221: ']',
 				219: '[',
 				107: '+',
-				109: '-'
+				109: '-',
+				32: ' ',
+				87: 'w'
 			};
 
 			this.$el.keydown(function (event) {
-				this.shortcut(keys[event.which]);
+				var key = keys[event.which];
+
+				if (typeof this.shortcuts[key] !== 'undefined') {
+					event.preventDefault();
+				}
+
+				this.shortcut(key);
+			}.bind(this));
+
+			this.$el.keyup(function (event) {
+				var key = keys[event.which]+'up';
+
+				if (typeof this.shortcuts[key] !== 'undefined') {
+					event.preventDefault();
+				}
+
+				this.shortcut(key);
 			}.bind(this));
 		},
 		renderPeer: function (peerModel) {

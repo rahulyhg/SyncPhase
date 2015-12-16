@@ -4,4 +4,12 @@ canvas {
 
 	background: #fff;
 	cursor: none;
+
+	&.pan {
+		cursor: grab;
+	}
+
+	&.panning {
+		cursor: grabbing;
+	}
 }

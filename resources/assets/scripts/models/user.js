@@ -14,7 +14,8 @@ define('models/user', [
 			cursor_y: 0,
 			weight: 10,
 			page_x: 0,
-			page_y: 0
+			page_y: 0,
+			panning: false
 		},
 		msgSoc: null,
 		initialize: function (attrs, opts) {

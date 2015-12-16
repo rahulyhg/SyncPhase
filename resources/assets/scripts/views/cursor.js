@@ -31,12 +31,26 @@ define('views/cursor', [
 				this.renderWeight();
 			}, this);
 
+			this.user.on('change:panning', function (user, panning) {
+				if (panning === true) {
+					this.hide();
+				} else {
+					this.show();
+				}
+			}, this);
+
 			var canvas = App.get('canvas');
 			canvas.on('change:zoom', function (canvas, zoom) {
 				this.zoom = zoom;
 
 				this.renderWeight();
 			}, this);
+		},
+		hide: function () {
+			this.$el.hide();
+		},
+		show: function () {
+			this.$el.show();
 		},
 		renderWeight: function () {
 			var size = this.weight*(this.zoom/100);

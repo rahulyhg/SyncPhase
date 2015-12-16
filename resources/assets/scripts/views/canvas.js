@@ -11,6 +11,8 @@ define('views/canvas', [
 		user: null,
 		template: null,
 		current_element: null,
+		pan_strated: false,
+		panning: false,
 		shadow: {
 			el: null,
 			context: null
@@ -58,6 +60,24 @@ define('views/canvas', [
 
 			}.bind(this));
 		},
+		wipe: function () {
+			this.renderGrid();
+			this.renderViewport();
+		},
+		startPan: function () {
+			this.pan_strated = true;
+			this.$el.find('#canvas').addClass('pan');
+
+			this.model.set('panning', true);
+			this.user.set('panning', true);
+		},
+		stopPan: function () {
+			this.pan_strated = false;
+			this.$el.find('#canvas').removeClass('pan');
+
+			this.model.set('panning', false);
+			this.user.set('panning', false);
+		},
 		listenStroke: function () {
 			console.log('Listening for Stroke Actions');
 
@@ -96,12 +116,22 @@ define('views/canvas', [
 		},
 		mousemove: function (event) {
 			console.log('User Moving Mouse..');
-			App.get('user').setPagePosition(event.pageX, event.pageY);
 
-			this.updateCursor();
+			if (this.panning) {
+				this.updatePan(event.pageX, event.pageY);
+			} else {
+				this.updateCursor(event.pageX, event.pageY);
+			}
 		},
-		updateCursor: function () {
-			var user = App.get('user');
+		updatePan: function () {
+			this.model.set('position_x');
+		},
+		updateCursor: function (x, y) {
+			if (x && y) {
+				this.user.setPagePosition(x, y);
+			}
+
+			var user = this.user;
 
 			var zoom_ratio = 100/this.model.get('zoom');
 
@@ -120,11 +150,21 @@ define('views/canvas', [
 			var x = this.model.get('position_x')+source_offset_x;
 			var y = this.model.get('position_y')+source_offset_y;
 
-			App.get('user').setCursorPosition(x, y);
+			this.user.setCursorPosition(x, y);
 		},
 		mousedown: function (event) {
 			console.log('User Mouse Down...');
 
+			if (this.pan_strated) {
+				this.beginPanning();
+			} else {
+				this.beginElement();
+			}
+		},
+		beginPanning: function () {
+			this.panning = true;
+		},
+		beginElement: function () {
 			var element = this.model.elements.add({
 				type: Types.LINE
 			});
@@ -140,6 +180,16 @@ define('views/canvas', [
 		mouseup: function (event) {
 			console.log('User Mouse Up...');
 
+			if (this.pan_strated) {
+				this.concludePanning();
+			} else {
+				this.concludeElement();
+			}
+		},
+		concludePanning: function () {
+			this.panning = false;
+		},
+		concludeElement: function () {
 			this.unlistenStroke();
 			this.current_element.conclude();
 			this.current_element = null;
