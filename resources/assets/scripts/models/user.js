@@ -53,11 +53,11 @@ define('models/user', [
 		},
 		increaseWeight: function () {
 			var weight = this.get('weight');
-			this.set('weight', weight+10);
+			this.set('weight', (3/2)*weight);
 		},
 		decreaseWeight: function () {
 			var weight = this.get('weight');
-			this.set('weight', weight-10);
+			this.set('weight', Math.ceil(weight-(weight/3)));
 		}
 	});
 
