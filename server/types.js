@@ -12,6 +12,7 @@ types.MESSAGE = 9;
 types.AUDIO = 10;
 types.VIDEO = 11;
 types.INIT = 12; 
+types.LINE = 13; 
 
 if (typeof module !== 'undefined') {
 	module.exports = types;

@@ -2,12 +2,15 @@ define('views/canvas', [
 	'app',
 	'backbone',
 	'template',
-	'jquery'
-], function (App, Backbone, Template, jQuery) {
+	'jquery',
+	'types'
+], function (App, Backbone, Template, jQuery, Types) {
 	var CanvasView = Backbone.View.extend({
 		tagName: 'section',
 		className: 'canvas',
+		user: null,
 		template: null,
+		current_element: null,
 		shadow: {
 			el: null,
 			context: null
@@ -18,6 +21,8 @@ define('views/canvas', [
 			'mouseup': 'mouseup',
 		},
 		initialize: function () {
+			this.user = App.get('user');
+
 			var shadow = jQuery(document.createElement('canvas'));
 
 			var size = this.model.get('size');
@@ -52,6 +57,26 @@ define('views/canvas', [
 
 			}.bind(this));
 		},
+		listenStroke: function () {
+			console.log('Listening for Stroke Actions');
+
+			this.user.on('change:cursor-position', this.strokePoint, this);
+			this.current_element.points.on('add', this.renderStroke, this);
+		},
+		unlistenStroke: function () {
+			console.log('Not Listening for Stroke Actions');
+
+			this.user.off('change:cursor-position', this.strokePoint);
+			this.current_element.points.off('add', this.renderStroke, this);
+		},
+		strokePoint: function (pos) {
+			console.log('New Stroke Point.');
+
+			this.current_element.points.add({
+				x: pos.x,
+				y: pos.y
+			});
+		},
 		resize: function () {
 			console.log('Resizing Canvas');
 			var canvas = this.$el.children('canvas#canvas');
@@ -70,11 +95,59 @@ define('views/canvas', [
 		},
 		mousedown: function (event) {
 			console.log('User Mouse Down...');
-			// App.user.set();
+
+			var element = this.model.elements.add({
+				type: Types.LINE
+			});
+
+			this.current_element = element;
+			this.listenStroke();
+
+			this.strokePoint({
+				x: this.user.get('cursor_x'),
+				y: this.user.get('cursor_y'),
+			});
 		},
 		mouseup: function (event) {
 			console.log('User Mouse Up...');
-			// App.user.set();
+
+			this.unlistenStroke();
+			this.current_element.conclude();
+			this.current_element = null;
+		},
+		renderStroke: function (point, points) {
+			console.log('Rendering stroke.');
+
+			var radius = this.user.get('weight');
+			var a = this.current_element.points.at(this.current_element.points.length-2);
+			var b = this.current_element.points.at(this.current_element.points.length-1);
+
+			var ctx = this.shadow.context;
+			ctx.save();
+			ctx.beginPath();
+
+			if (points.length > 1) {
+				ctx.strokeStyle = 'red';
+				ctx.lineJoin = 'round';
+				ctx.lineWidth = radius;
+
+				ctx.moveTo(a.get('x'), a.get('y'));
+				ctx.lineTo(b.get('x'), b.get('y'));
+
+				ctx.closePath();
+				ctx.stroke();
+
+			} else {
+				ctx.fillStyle = 'red';
+				ctx.arc(b.get('x'), b.get('y'), radius/2, 0, Math.PI*2, false);
+
+				ctx.closePath();
+				ctx.fill();
+			}
+
+			ctx.restore();
+
+			this.renderViewport();
 		},
 		renderGrid: function () {
 			var size = this.model.get('size');

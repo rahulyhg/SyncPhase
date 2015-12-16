@@ -1,6 +1,7 @@
 define('models/canvas', [
-	'backbone'
-], function (Backbone) {
+	'backbone',
+	'collections/elements'
+], function (Backbone, ElementsCollection) {
 	var CanvasModel = Backbone.Model.extend({
 		defaults: {
 			zoom: 100,
@@ -9,6 +10,10 @@ define('models/canvas', [
 			viewport_width: null,
 			position_x: 0,
 			position_y: 0
+		},
+		elements: null,
+		initialize: function () {
+			this.elements = new ElementsCollection();
 		},
 		zoomIn: function () {
 			var zoom = this.get('zoom');
