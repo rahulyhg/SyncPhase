@@ -82,16 +82,23 @@ define('views/canvas', [
 			var canvas = this.$el.children('canvas#canvas');
 			var height = canvas.height();
 			var width = canvas.width();
+			var offset = canvas.offset();
 
 			this.model.set('viewport_height', height);
 			this.model.set('viewport_width', width);
+
+			this.model.set('viewport_position_x', offset.left);
+			this.model.set('viewport_position_y', offset.top);
 
 			canvas.attr('height', height);
 			canvas.attr('width', width);
 		},
 		mousemove: function (event) {
 			console.log('User Moving Mouse..');
-			App.get('user').setCursorPosition(event.pageX, event.pageY);
+			var x = this.model.get('viewport_position_x');
+			var y = this.model.get('viewport_position_y');
+
+			App.get('user').setCursorPosition(event.pageX-x, event.pageY-y);
 		},
 		mousedown: function (event) {
 			console.log('User Mouse Down...');

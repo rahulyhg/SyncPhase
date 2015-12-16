@@ -8,6 +8,8 @@ define('models/canvas', [
 			size: 1024*3,
 			viewport_height: null,
 			viewport_width: null,
+			viewport_position_x: null,
+			viewport_position_y: null,
 			position_x: 0,
 			position_y: 0
 		},

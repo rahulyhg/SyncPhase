@@ -10,6 +10,10 @@ define('views/cursor', [
 		midpoint: 32/2,
 		x: 0,
 		y: 0,
+		offset: {
+			x: 0,
+			y: 0
+		},
 		initialize: function () {
 			this.user = App.get('user');
 
@@ -27,17 +31,29 @@ define('views/cursor', [
 				this.weight = weight;
 				this.renderWeight();
 			}, this);
+
+			var canvas = App.get('canvas');
+			canvas.on('change:viewport_position_x', function (canvas, x) {
+				console.log(x);
+				this.offset.x = x;
+			}, this);
+
+			canvas.on('change:viewport_position_y', function (canvas, y) {
+				console.log(y);
+				this.offset.y = y;
+			}, this);
 		},
 		renderWeight: function () {
 			this.midpoint = this.weight/2;
 			this.$el.height(this.weight).width(this.weight);
 
-			this.el.style.top = (this.y-this.midpoint) + 'px';
-			this.el.style.left = (this.x-this.midpoint) + 'px';
+			this.el.style.top = (this.y-this.midpoint+this.offset.y) + 'px';
+			this.el.style.left = (this.x-this.midpoint+this.offset.x) + 'px';
 		},
 		renderLocation: function () {
-			this.el.style.top = (this.y-this.midpoint) + 'px';
-			this.el.style.left = (this.x-this.midpoint) + 'px';
+			console.log(this.offset.x);
+			this.el.style.top = (this.y-this.midpoint+this.offset.y) + 'px';
+			this.el.style.left = (this.x-this.midpoint+this.offset.x) + 'px';
 		},
 		render: function (opts) {
 			var container = opts.container;
