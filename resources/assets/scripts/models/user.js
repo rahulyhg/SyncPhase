@@ -42,7 +42,6 @@ define('models/user', [
 			});
 		},
 		setCursorPosition: function (x, y) {
-			console.log('cursor_x: '+x);
 			this.set('cursor_x', Math.round(x));
 			this.set('cursor_y', Math.round(y));
 

@@ -13,6 +13,10 @@ define('views/canvas', [
 		current_element: null,
 		pan_strated: false,
 		panning: false,
+		pan_start: {
+			x: 0,
+			y: 0
+		},
 		shadow: {
 			el: null,
 			context: null
@@ -123,12 +127,21 @@ define('views/canvas', [
 				this.updateCursor(event.pageX, event.pageY);
 			}
 		},
-		updatePan: function () {
-			this.model.set('position_x');
+		updatePan: function (x, y) {
+			var page_x = this.user.get('page_x');
+			var page_y = this.user.get('page_y');
+
+			var diff_x = this.pan_start.x-x+page_x;
+			var diff_y = this.pan_start.y-y+page_y;
+
+			this.model.set('position_x', diff_x > 0 ? diff_x : 0);
+			this.model.set('position_y', diff_y > 0 ? diff_y : 0);
+
+			this.renderViewport();
 		},
-		updateCursor: function (x, y) {
-			if (x && y) {
-				this.user.setPagePosition(x, y);
+		updateCursor: function (px, py) {
+			if (px && py) {
+				this.user.setPagePosition(px, py);
 			}
 
 			var user = this.user;
@@ -163,6 +176,10 @@ define('views/canvas', [
 		},
 		beginPanning: function () {
 			this.panning = true;
+			this.$el.find('#canvas').addClass('panning');
+
+			this.pan_start.x = this.model.get('position_x');
+			this.pan_start.y = this.model.get('position_y');
 		},
 		beginElement: function () {
 			var element = this.model.elements.add({
@@ -188,6 +205,7 @@ define('views/canvas', [
 		},
 		concludePanning: function () {
 			this.panning = false;
+			this.$el.find('#canvas').removeClass('panning');
 		},
 		concludeElement: function () {
 			this.unlistenStroke();
