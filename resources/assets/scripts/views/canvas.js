@@ -44,6 +44,7 @@ define('views/canvas', [
 			}, this);
 
 			this.model.on('change:zoom', this.renderViewport, this);
+			this.model.on('change:zoom', this.updateCursor, this);
 
 			this.el.addEventListener('touchmove', function (event) {
 				var touches = event.changedTouches;
@@ -95,14 +96,20 @@ define('views/canvas', [
 		},
 		mousemove: function (event) {
 			console.log('User Moving Mouse..');
+			App.get('user').setPagePosition(event.pageX, event.pageY);
+
+			this.updateCursor();
+		},
+		updateCursor: function () {
+			var user = App.get('user');
 
 			var zoom_ratio = 100/this.model.get('zoom');
 
 			var viewport_width = this.model.get('viewport_width');
 			var viewport_height = this.model.get('viewport_height');
 
-			var viewport_x = event.pageX-this.model.get('viewport_position_x');
-			var viewport_y = event.pageY-this.model.get('viewport_position_y');
+			var viewport_x = user.get('page_x')-this.model.get('viewport_position_x');
+			var viewport_y = user.get('page_y')-this.model.get('viewport_position_y');
 
 			var ratio_x = viewport_x/viewport_width;
 			var ratio_y = viewport_y/viewport_height;
@@ -113,7 +120,7 @@ define('views/canvas', [
 			var x = this.model.get('position_x')+source_offset_x;
 			var y = this.model.get('position_y')+source_offset_y;
 
-			App.get('user').setCursorPosition(x, y, event.pageX, event.pageY);
+			App.get('user').setCursorPosition(x, y);
 		},
 		mousedown: function (event) {
 			console.log('User Mouse Down...');

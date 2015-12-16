@@ -31,18 +31,23 @@ define('models/user', [
 				this.msgSoc.send(msg);
 			}, this);
 		},
-		setCursorPosition: function (x, y, px, py) {
+		setPagePosition: function (x, y) {
+			this.set('page_x', x);
+			this.set('page_y', y);
+
+			this.trigger('change:page-position', {
+				x: x,
+				y: y
+			});
+		},
+		setCursorPosition: function (x, y) {
+			console.log('cursor_x: '+x);
 			this.set('cursor_x', Math.round(x));
 			this.set('cursor_y', Math.round(y));
 
-			this.set('page_x', px);
-			this.set('page_y', py);
-
 			this.trigger('change:cursor-position', {
 				x: x,
-				y: y,
-				px: px,
-				py: py
+				y: y
 			});
 		},
 		getCursorPosition: function () {

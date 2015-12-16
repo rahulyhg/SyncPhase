@@ -10,10 +10,7 @@ define('views/cursor', [
 		midpoint: null,
 		x: 0,
 		y: 0,
-		offset: {
-			x: 0,
-			y: 0
-		},
+		zoom: 100,
 		initialize: function () {
 			var user = this.user = App.get('user');
 			this.weight = user.get('weight');
@@ -22,9 +19,9 @@ define('views/cursor', [
 			this.listen();
 		},
 		listen: function () {
-			this.user.on('change:cursor-position', function (data) {
-				this.x = data.px;
-				this.y = data.py;
+			this.user.on('change:page-position', function (data) {
+				this.x = data.x;
+				this.y = data.y;
 
 				this.renderLocation();
 			}, this);
@@ -34,26 +31,22 @@ define('views/cursor', [
 				this.renderWeight();
 			}, this);
 
-			// var canvas = App.get('canvas');
-			// canvas.on('change:viewport_position_x', function (canvas, x) {
-			// 	console.log(x);
-			// 	this.offset.x = x;
-			// }, this);
+			var canvas = App.get('canvas');
+			canvas.on('change:zoom', function (canvas, zoom) {
+				this.zoom = zoom;
 
-			// canvas.on('change:viewport_position_y', function (canvas, y) {
-			// 	console.log(y);
-			// 	this.offset.y = y;
-			// }, this);
+				this.renderWeight();
+			}, this);
 		},
 		renderWeight: function () {
-			this.midpoint = this.weight/2;
-			this.$el.height(this.weight).width(this.weight);
+			var size = this.weight*(this.zoom/100);
+			this.midpoint = size/2;
+			this.$el.height(size).width(size);
 
 			this.el.style.top = (this.y-this.midpoint) + 'px';
 			this.el.style.left = (this.x-this.midpoint) + 'px';
 		},
 		renderLocation: function () {
-			console.log(this.offset.x);
 			this.el.style.top = (this.y-this.midpoint) + 'px';
 			this.el.style.left = (this.x-this.midpoint) + 'px';
 		},
